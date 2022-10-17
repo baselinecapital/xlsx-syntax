@@ -32,6 +32,12 @@ describe("Basic tests", function() {
             a: [1,2,3]
         })).eql(6);
 
+        should(calculate("SUM({{a.b}})", {
+            a: {
+                b: [1,2,3],
+            }
+        })).eql(6);
+
         should(calculate("SUM({{a}})", {
             a: [1]
         })).eql(1);
@@ -117,6 +123,40 @@ describe("Basic tests", function() {
         should.throws(() => {
             parse("={{a}}/{{c}}", {b: 3});
         }, "Missing variable: a");
+    });
+
+    it("should sum a property of an array", async () => {
+        should(calculate("SUM({{a.value}})", {
+            a: [
+                {value: 1},
+                {value: 2},
+                {value: 3},
+            ]
+        })).eql(6);
+    });
+
+    it("should sum a property of an array (multi-level)", async () => {
+        should(calculate("SUM({{outer.a.value}})", {
+            outer: {
+                a: [
+                    {value: 1},
+                    {value: 2},
+                    {value: 3},
+                ]
+            }
+        })).eql(6);
+
+        should(calculate("SUM({{more.outer.a.value}})", {
+            more: {
+                outer: {
+                    a: [
+                        {value: 1},
+                        {value: 2},
+                        {value: 3},
+                    ]
+                }
+            }
+        })).eql(6);
     });
 
 });

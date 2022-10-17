@@ -15,7 +15,14 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"]) {
             const levels = prop.split(".");
             if(levels.length === 1) 
             {
-                return prop in obj;
+                if(Array.isArray(obj))
+                {
+                    return prop in obj[0];
+                }
+                else
+                {
+                    return prop in obj;
+                }
             }
             else
             {
@@ -41,17 +48,45 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"]) {
         switch(type)
         {
             case 'name':
-                const variable = text;
-                if(vars[variable] !== undefined && typeof vars[variable] === "function")
+                function clean(text,subvars, original)
                 {
-                    const result = vars[variable].call();
-                    vars[variable] = result;
+                    const dots = text.split(".");
+                    const variable = dots[0];
+
+                    if(dots.length > 2)
+                    {
+                        subvars = subvars[dots[0]];
+                        return clean(dots.slice(1).join("."), subvars, original);
+                    }
+                    else
+                    {
+                        if(subvars[variable] !== undefined && typeof subvars[variable] === "function")
+                        {
+                            const result = subvars[variable].call();
+                            subvars[variable] = result;
+                        }
+                        if(subvars[variable] !== undefined && Array.isArray(subvars[variable]))
+                        {
+                            if(dots.length === 2)
+                            {
+                                const values = subvars[variable].map((item) => item[dots[1]]);
+
+                                const new_id = Math.random().toString();
+
+                                vars[new_id] = values;
+
+                                return [...acc, `'${new_id}'!A1:A${vars[new_id].length}`];
+                            }
+
+                            return [...acc, `'${variable}'!A1:A${subvars[variable].length}`];
+                        }
+                        return [...acc, `${customTags[0]}${text}${customTags[1]}`];
+                    }
+
                 }
-                if(vars[variable] !== undefined && Array.isArray(vars[variable]))
-                {
-                    return [...acc, `'${variable}'!A1:A${vars[variable].length}`];
-                }
-                return [...acc, `${customTags[0]}${text}${customTags[1]}`];
+
+                return clean(text, vars, text + "");
+                
             default:
                 return [...acc, text];
         }
