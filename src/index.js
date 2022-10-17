@@ -11,7 +11,20 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"]) {
 
     // Find missing variables
     parse(formula, customTags).map((variable) => {
-        if(!(variable in vars))
+        function hasProperty(obj, prop) {
+            const levels = prop.split(".");
+            if(levels.length === 1) 
+            {
+                return prop in obj;
+            }
+            else
+            {
+                const [first, ...rest] = levels;
+                return hasProperty(obj[first], rest.join("."));
+            }
+        }
+
+        if(!hasProperty(vars, variable))
         {
             throw {
                 message: `Missing variable: ${variable}`,

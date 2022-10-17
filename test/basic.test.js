@@ -89,6 +89,13 @@ describe("Basic tests", function() {
         should(calculate("={{loan-amount}}/12", {
             "loan-amount": "100000"
         })).eql(8333.333333333334);
+
+        should(calculate("={{data.loan-amount}}/12", {
+            data:
+            {
+                "loan-amount": "100000"
+            }
+        })).eql(8333.333333333334);
     });
 
     it("should get the variables necessary in the formula", async () => {
@@ -97,6 +104,8 @@ describe("Basic tests", function() {
         should(parse("={{loan-amount}}/12")).eql(["loan-amount"]);
 
         should(parse("1/12")).eql([]);
+
+        should(parse("{{data.test}}")).eql(["data.test"]);
         
     });
 
