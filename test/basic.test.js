@@ -80,4 +80,11 @@ describe("Basic tests", function() {
         })).eql(10);
     });
 
+    it("should handle a formula starting with =", async () => {
+        should(parse("=1+{{a}}+IF(SUM({{b}})>2,SUM({{b}}),0)", {
+            a: 3,
+            b: [1,2,3]
+        })).eql(10);
+    });
+
 });
