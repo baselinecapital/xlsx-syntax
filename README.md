@@ -9,28 +9,36 @@ npm install xlsx-syntax
 
 ## Usage
 ```js
-const {parse} = require("xlsx-syntax");
-parse(formula, variables, [customTags]);
+const {calculate} = require("xlsx-syntax");
+
+// Calculate the result of the function
+calculate(formula, variables, [customTags]);
+
+// Parse out any variables that should be passed
+parse(formula, [customTags])
 ```
 
 ## Example
 ```js
-const {parse} = require("xlsx-syntax");
-parse("1+{{a}}", {a: 2})
+const {calculate, parse} = require("xlsx-syntax");
+calculate("1+{{a}}", {a: 2})
 // 3
 
-parse("1+SUM({{a}})", {a: [1,2,3]})
+calculate("1+SUM({{a}})", {a: [1,2,3]})
 // 7
 
-parse("1+SUM({{a}})", {a: () => {
+calculate("1+SUM({{a}})", {a: () => {
     // Do something
     return [1,2,3];
 }})
 // 7
 
 // Custom tags
-parse("1+${a}", {a: 2}, ["${", "}"])
+calculate("1+${a}", {a: 2}, ["${", "}"])
 // 3
+
+parse("1+{{a}}/{{b}}")
+// ["a", "b"]
 ```
 
 ## Special Thanks
