@@ -159,4 +159,18 @@ describe("Basic tests", function() {
         })).eql(6);
     });
 
+    it("should suppress errors by default", async () => {
+        should(calculate("1/0")).eql(undefined);
+        
+        try
+        {
+            calculate("1/0", undefined, undefined, false);
+            throw "Should not get here";
+        }
+        catch(err)
+        {
+            err.should.eql("#DIV/0!");
+        }
+    });
+
 });

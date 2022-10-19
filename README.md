@@ -12,7 +12,7 @@ npm install xlsx-syntax
 const {calculate} = require("xlsx-syntax");
 
 // Calculate the result of the function
-calculate(formula, variables, [customTags]);
+calculate(formula, variables, [customTags], [suppress_errors /* true */]);
 
 // Parse out any variables that should be passed
 parse(formula, [customTags])
@@ -32,6 +32,12 @@ calculate("1+SUM({{a}})", {a: () => {
     return [1,2,3];
 }})
 // 7
+
+calculate("1/0")
+// undefined
+
+calculate("1/0", undefined, undefined, false);
+// Throw error: #DIV/0!
 
 // Custom tags
 calculate("1+${a}", {a: 2}, ["${", "}"])

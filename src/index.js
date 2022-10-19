@@ -6,7 +6,7 @@ function parse(formula, customTags) {
     return [...new Set(parsed.filter(([type]) => type === "name").map(([type, text]) => text))];
 }
 
-function calculate(formula, variables = {}, customTags = ["{{", "}}"]) {
+function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_errors = true) {
     const vars = {...variables};
 
     // Find missing variables
@@ -118,7 +118,11 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"]) {
 
     XLSX_CALC(workbook);
 
-    return workbook.Sheets.Sheet1.A1.v;
+    const {w: error} = workbook.Sheets.Sheet1.A1;
+
+    if(error && !suppress_errors) throw error;
+
+    return error ? undefined : workbook.Sheets.Sheet1.A1.v;
 
 
 }
