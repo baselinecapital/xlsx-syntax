@@ -51,6 +51,13 @@ describe("Basic tests", function() {
             b: [3,2,1]
         })).eql(10);
 
+        should(calculate("SUMPRODUCT({{a.b}},{{b}})", {
+            a: {
+                b: [1,2,3],
+            },
+            b: [3,2,1]
+        })).eql(10);
+
         should(calculate("SUMPRODUCT(({{a}}),({{b}}))", {
             a: [1,2,3],
             b: [3,2,1]
@@ -172,5 +179,18 @@ describe("Basic tests", function() {
             err.should.eql("#DIV/0!");
         }
     });
+
+    it("should handle deeply nested arrays", async () => {
+        should(calculate("=SUM({{a.b.c.d}})", {
+            "a": {
+                "b": {
+                    "c": {
+                        "d": [1000, 1000, 5000, 2000]
+                    }
+                }
+            }
+        })).eql(9000);
+    });
+
 
 });

@@ -53,36 +53,34 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_
                     const dots = text.split(".");
                     const variable = dots[0];
 
-                    if(dots.length > 2)
+                    if(dots.length == 2 && subvars[variable] && Array.isArray(subvars[variable]))
+                    {
+                        const value = subvars[variable].map(o => o[dots[1]]);
+                        subvars[variable] = {
+                            [dots[1]]: value,
+                        }
+                        return clean(text, subvars, original);
+                    }
+                    else if(dots.length == 1 && subvars[variable] && Array.isArray(subvars[variable]))
+                    {
+                        vars[original] = subvars[variable];
+                        return [...acc, `'${original}'!A1:A${subvars[variable].length}`];
+                    }
+                    else if(dots.length === 1 && typeof subvars[variable] === 'function')
+                    {
+                        const result = subvars[variable].call();
+                        subvars[variable] = result;
+                        return clean(text, subvars, original);
+                    }
+                    else if(dots.length === 1)
+                    {
+                        return [...acc, `${customTags[0]}${original}${customTags[1]}`];
+                    }
+                    else
                     {
                         subvars = subvars[dots[0]];
                         return clean(dots.slice(1).join("."), subvars, original);
                     }
-                    else
-                    {
-                        if(subvars[variable] !== undefined && typeof subvars[variable] === "function")
-                        {
-                            const result = subvars[variable].call();
-                            subvars[variable] = result;
-                        }
-                        if(subvars[variable] !== undefined && Array.isArray(subvars[variable]))
-                        {
-                            if(dots.length === 2)
-                            {
-                                const values = subvars[variable].map((item) => item[dots[1]]);
-
-                                const new_id = Math.random().toString();
-
-                                vars[new_id] = values;
-
-                                return [...acc, `'${new_id}'!A1:A${vars[new_id].length}`];
-                            }
-
-                            return [...acc, `'${variable}'!A1:A${subvars[variable].length}`];
-                        }
-                        return [...acc, `${customTags[0]}${text}${customTags[1]}`];
-                    }
-
                 }
 
                 return clean(text, vars, text + "");
