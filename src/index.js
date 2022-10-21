@@ -64,7 +64,7 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_
                     else if(dots.length == 1 && subvars[variable] && Array.isArray(subvars[variable]))
                     {
                         vars[original] = subvars[variable];
-                        return [...acc, `'${original}'!A1:A${subvars[variable].length}`];
+                        return [...acc, `'${transform_array_key(original)}'!A1:A${subvars[variable].length}`];
                     }
                     else if(dots.length === 1 && typeof subvars[variable] === 'function')
                     {
@@ -102,7 +102,7 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_
             },
             // Convert any arrays into their own sheet with a range of cells
             ...Object.entries(vars).filter(([key, value]) => Array.isArray(value)).reduce((acc, [key, value]) => {
-                acc[key] = value.reduce((acc, value, index) => {
+                acc[transform_array_key(key)] = value.reduce((acc, value, index) => {
                     acc[`A${index + 1}`] = {
                         v: value
                     };
@@ -123,6 +123,11 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_
     return error ? undefined : workbook.Sheets.Sheet1.A1.v;
 
 
+}
+
+function transform_array_key(key)
+{
+    return key.replace(/'/g, "");
 }
 
 module.exports = {

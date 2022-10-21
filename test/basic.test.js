@@ -192,5 +192,16 @@ describe("Basic tests", function() {
         })).eql(9000);
     });
 
+    it("should handle variables with a single quote in them", async () => {
+        should(calculate("SUM({{a's}})", {
+            "a's": [1,2,3]
+        })).eql(6);
+
+        should(calculate("2 * {{a's}}", {
+            "a's": 5
+        })).eql(10);
+    });
+
+
 
 });
