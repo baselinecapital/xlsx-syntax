@@ -91,7 +91,10 @@ function calculate(formula, variables = {}, customTags = ["{{", "}}"], suppress_
         
     }, []).join("");
     
-    const rendered_formula = Mustache.render(substituted_formula, vars, {}, customTags);
+    const rendered_formula = Mustache.render(substituted_formula, vars, {}, {
+        tags: customTags,
+        escape: (text) => text,
+    });
 
     const workbook = {
         Sheets: {

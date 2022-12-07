@@ -202,6 +202,12 @@ describe("Basic tests", function() {
         })).eql(10);
     });
 
+    it("should not HTML escape text strings", async () => {
+        should(calculate(`IF("{{a}}"="c/d",666,999)`, {
+            a: "c/d"
+        })).eql(666);
+    });
+
 
 
 });
