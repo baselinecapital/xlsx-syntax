@@ -3,53 +3,58 @@
 Parses XLSX-style formulas with variable substitution, and produces a result. Supports the formulas [in the xlsx-calc project](https://github.com/fabiooshiro/xlsx-calc/blob/master/src/formulas.js#L6). The formula is written using [mustache](https://github.com/janl/mustache.js/) syntax, including custom tags. Any array variables produce a range within the formula e.g. `SUM({{array}})` with variable `array:[1,2,3]` is equivalent to `SUM(A1:A3)` where the rows are `1,2,3` respectively.
 
 ## Installation
+
 ```bash
 npm install xlsx-syntax
 ```
 
 ## Usage
+
 ```js
-const {calculate} = require("xlsx-syntax");
+const { calculate } = require("xlsx-syntax");
 
 // Calculate the result of the function
 calculate(formula, variables, [customTags], [suppress_errors /* true */]);
 
 // Parse out any variables that should be passed
-parse(formula, [customTags])
+parse(formula, [customTags]);
 ```
 
 ## Example
+
 ```js
-const {calculate, parse} = require("xlsx-syntax");
-calculate("1+{{a}}", {a: 2})
+const { calculate, parse } = require("xlsx-syntax");
+calculate("1+{{a}}", { a: 2 });
 // 3
 
-calculate("1+SUM({{a}})", {a: [1,2,3]})
+calculate("1+SUM({{a}})", { a: [1, 2, 3] });
 // 7
 
-calculate("1+SUM({{a}})", {a: () => {
-    // Do something
-    return [1,2,3];
-}})
+calculate("1+SUM({{a}})", {
+	a: () => {
+		// Do something
+		return [1, 2, 3];
+	},
+});
 // 7
 
-calculate("1/0")
+calculate("1/0");
 // undefined
 
 calculate("1/0", undefined, undefined, false);
 // Throw error: #DIV/0!
 
 // Custom tags
-calculate("1+${a}", {a: 2}, ["${", "}"])
+calculate("1+${a}", { a: 2 }, ["${", "}"]);
 // 3
 
-parse("1+{{a}}/{{b}}")
+parse("1+{{a}}/{{b}}");
 // ["a", "b"]
 ```
 
 ## Special Thanks
-Special thanks to the team who made [xlsx-calc](https://github.com/fabiooshiro/xlsx-calc) who made the underlying formula parsing for this library.
 
+Special thanks to the team who made [xlsx-calc](https://github.com/fabiooshiro/xlsx-calc) who made the underlying formula parsing for this library.
 
 ## MIT License
 

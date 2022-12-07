@@ -1,32 +1,32 @@
 {
-  "name": "xlsx-syntax",
-  "version": "0.2.5",
-  "description": "Parse formulas in XLSX syntax and generate a result",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "mocha test/*.test.js --bail"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/baselinecapital/xlsx-syntax.git"
-  },
-  "keywords": [
-    "xlsx",
-    "parse",
-    "formula"
-  ],
-  "author": "Jonathan Keebler",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/baselinecapital/xlsx-syntax/issues"
-  },
-  "homepage": "https://github.com/baselinecapital/xlsx-syntax#readme",
-  "dependencies": {
-    "@baselinelending/xlsx-calc": "^0.8.1",
-    "mustache": "^4.2.0"
-  },
-  "devDependencies": {
-    "mocha": "^9.2.2",
-    "should": "^13.2.3"
-  }
+	"name": "xlsx-syntax",
+	"version": "0.2.5",
+	"description": "Parse formulas in XLSX syntax and generate a result",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "mocha test/*.test.js --bail"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/baselinecapital/xlsx-syntax.git"
+	},
+	"keywords": [
+		"xlsx",
+		"parse",
+		"formula"
+	],
+	"author": "Jonathan Keebler",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/baselinecapital/xlsx-syntax/issues"
+	},
+	"homepage": "https://github.com/baselinecapital/xlsx-syntax#readme",
+	"dependencies": {
+		"@baselinelending/xlsx-calc": "^0.8.1",
+		"mustache": "^4.2.0"
+	},
+	"devDependencies": {
+		"mocha": "^9.2.2",
+		"should": "^13.2.3"
+	}
 }
