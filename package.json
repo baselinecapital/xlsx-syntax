@@ -23,7 +23,7 @@
   "homepage": "https://github.com/baselinecapital/xlsx-syntax#readme",
   "dependencies": {
     "mustache": "^4.2.0",
-    "xlsx-calc": "^0.7.0"
+    "xlsx-calc": "baselinecapital/xlsx-calc"
   },
   "devDependencies": {
     "mocha": "^9.2.2",
