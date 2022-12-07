@@ -1,4 +1,4 @@
-const XLSX_CALC = require('xlsx-calc');
+const XLSX_CALC = require('@baselinelending/xlsx-calc');
 const Mustache = require('mustache');
 
 function parse(formula, customTags) {
