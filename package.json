@@ -22,7 +22,7 @@
 	},
 	"homepage": "https://github.com/baselinecapital/xlsx-syntax#readme",
 	"dependencies": {
-		"@baselinelending/xlsx-calc": "^0.8.1",
+		"@baselinelending/xlsx-calc": "^0.8.2",
 		"mustache": "^4.2.0"
 	},
 	"devDependencies": {
