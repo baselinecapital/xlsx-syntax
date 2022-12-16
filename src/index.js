@@ -105,7 +105,14 @@ function calculate(
 		{},
 		{
 			tags: customTags,
-			escape: text => text,
+			escape: text => {
+				if (text instanceof Date) {
+					return `"${text.toISOString()}"`;
+				} else if (typeof text === "string") {
+					return `"${text}"`;
+				}
+				return text;
+			},
 		}
 	);
 

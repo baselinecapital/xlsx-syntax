@@ -234,9 +234,37 @@ describe("Basic tests", function () {
 
 	it("should not HTML escape text strings", async () => {
 		should(
-			calculate(`IF("{{a}}"="c/d",666,999)`, {
+			calculate(`IF({{a}}="c/d",666,999)`, {
 				a: "c/d",
 			})
 		).eql(666);
+	});
+
+	it("should handle decimals", async () => {
+		should(
+			calculate(`IF({{a}}=3.14,666,999)`, {
+				a: 3.14,
+			})
+		).eql(666);
+	});
+
+	it("should handle dates", async () => {
+		const date = new Date(2000, 0, 2, 0, 0, 0, 0);
+		date.setUTCHours(0, 0, 0, 0);
+
+		const endofmonth = new Date(2000, 0, 31, 0, 0, 0, 0);
+		endofmonth.setUTCHours(0, 0, 0, 0);
+
+		should(
+			calculate(`EOMONTH({{a}})`, {
+				a: date,
+			})
+		).eql(endofmonth);
+
+		should(
+			calculate(`EOMONTH({{a.b}})`, {
+				a: { b: date },
+			})
+		).eql(endofmonth);
 	});
 });
