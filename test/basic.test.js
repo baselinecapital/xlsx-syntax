@@ -84,6 +84,14 @@ describe("Basic tests", function () {
 				b: [3, 2, 1],
 			})
 		).eql(10);
+
+		should(
+			calculate("SUMPRODUCT(({{a}}),({{b}}))", {
+				a: [],
+				b: [],
+			})
+		).eql(0);
+
 	});
 
 	it("should parse a formula with a range function", async () => {
