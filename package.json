@@ -1,6 +1,6 @@
 {
 	"name": "xlsx-syntax",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"description": "Parse formulas in XLSX syntax and generate a result",
 	"main": "src/index.js",
 	"scripts": {
