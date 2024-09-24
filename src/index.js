@@ -16,7 +16,9 @@ function calculate(
 	customTags = ["{{", "}}"],
 	suppress_errors = true
 ) {
-	const vars = { ...variables };
+	const is_function = typeof variables === "function";
+
+	const vars = is_function ? {} : { ...variables };
 
 	// Find missing variables
 	parse(formula, customTags).map(variable => {
@@ -34,7 +36,16 @@ function calculate(
 			}
 		}
 
-		if (!hasProperty(vars, variable)) {
+		if (is_function) {
+			try {
+				vars[variable] = variables(variable);
+			} catch (e) {
+				throw {
+					message: `Missing variable: ${variable}`,
+					variable,
+				};
+			}
+		} else if (!hasProperty(vars, variable)) {
 			throw {
 				message: `Missing variable: ${variable}`,
 				variable,
@@ -51,7 +62,7 @@ function calculate(
 			switch (type) {
 				case "name":
 					function clean(text, subvars, original) {
-						const dots = text.split(".");
+						const dots = is_function ? [text] : text.split(".");
 						const variable = dots[0];
 
 						if (
