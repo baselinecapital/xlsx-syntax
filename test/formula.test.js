@@ -156,4 +156,108 @@ describe("Date formula tests", function () {
 			})
 		).eql(202385); // 2023*100 + 7*10 + 15
 	});
+
+	it("should calculate date differences using DATEDIF() with years", async () => {
+		const startDate = new Date(2020, 0, 15, 0, 0, 0, 0);
+		startDate.setUTCHours(0, 0, 0, 0);
+		const endDate = new Date(2023, 0, 15, 0, 0, 0, 0);
+		endDate.setUTCHours(0, 0, 0, 0);
+
+		// Exactly 3 years
+		should(
+			calculate('DATEDIF({{start}},{{end}},"Y")', {
+				start: startDate,
+				end: endDate,
+			})
+		).eql(3);
+
+		// Another multi-year period
+		const start2 = new Date(2020, 5, 15, 0, 0, 0, 0);
+		start2.setUTCHours(0, 0, 0, 0);
+		const end2 = new Date(2024, 0, 15, 0, 0, 0, 0);
+		end2.setUTCHours(0, 0, 0, 0);
+		should(
+			calculate('DATEDIF({{start}},{{end}},"Y")', {
+				start: start2,
+				end: end2,
+			})
+		).eql(4);
+	});
+
+	it("should calculate date differences using DATEDIF() with months", async () => {
+		const startDate = new Date(2023, 0, 15, 0, 0, 0, 0);
+		startDate.setUTCHours(0, 0, 0, 0);
+		const endDate = new Date(2023, 6, 15, 0, 0, 0, 0);
+		endDate.setUTCHours(0, 0, 0, 0);
+
+		// Exactly 6 months
+		should(
+			calculate('DATEDIF({{start}},{{end}},"M")', {
+				start: startDate,
+				end: endDate,
+			})
+		).eql(6);
+
+		// Test across years (14 months)
+		const start2 = new Date(2022, 5, 15, 0, 0, 0, 0);
+		start2.setUTCHours(0, 0, 0, 0);
+		const end2 = new Date(2023, 7, 15, 0, 0, 0, 0);
+		end2.setUTCHours(0, 0, 0, 0);
+		should(
+			calculate('DATEDIF({{start}},{{end}},"M")', {
+				start: start2,
+				end: end2,
+			})
+		).eql(14);
+	});
+
+	it("should calculate date differences using DATEDIF() with days", async () => {
+		const startDate = new Date(2023, 0, 1, 0, 0, 0, 0);
+		startDate.setUTCHours(0, 0, 0, 0);
+		const endDate = new Date(2023, 0, 11, 0, 0, 0, 0);
+		endDate.setUTCHours(0, 0, 0, 0);
+
+		// 10 days difference
+		should(
+			calculate('DATEDIF({{start}},{{end}},"D")', {
+				start: startDate,
+				end: endDate,
+			})
+		).eql(10);
+
+		// Test longer period
+		const start2 = new Date(2023, 0, 1, 0, 0, 0, 0);
+		start2.setUTCHours(0, 0, 0, 0);
+		const end2 = new Date(2023, 11, 31, 0, 0, 0, 0);
+		end2.setUTCHours(0, 0, 0, 0);
+		should(
+			calculate('DATEDIF({{start}},{{end}},"D")', {
+				start: start2,
+				end: end2,
+			})
+		).eql(364);
+	});
+
+	it("should calculate date differences using DATEDIF() with combined dates and formulas", async () => {
+		const startDate = new Date(2020, 0, 1, 0, 0, 0, 0);
+		startDate.setUTCHours(0, 0, 0, 0);
+		const endDate = new Date(2022, 0, 1, 0, 0, 0, 0);
+		endDate.setUTCHours(0, 0, 0, 0);
+
+		// Calculate years difference
+		should(
+			calculate('DATEDIF({{start}},{{end}},"Y")', {
+				start: startDate,
+				end: endDate,
+			})
+		).eql(2);
+
+		// Test with arithmetic - multiply years by 12
+		should(
+			calculate('DATEDIF({{start}},{{end}},"Y")*12', {
+				start: startDate,
+				end: endDate,
+			})
+		).eql(24);
+	});
 });
