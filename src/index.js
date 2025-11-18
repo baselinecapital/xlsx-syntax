@@ -1,4 +1,7 @@
 const XLSX_CALC = require("@baselinelending/xlsx-calc");
+const formulajs = require("@formulajs/formulajs");
+XLSX_CALC.import_functions(formulajs);
+
 const Mustache = require("mustache");
 
 function parse(formula, customTags) {
@@ -87,6 +90,9 @@ function calculate(
 									subvars[variable].length
 								}`,
 							];
+						} else if (dots.length === 1 && subvars[variable] instanceof Date) {
+							vars[original] = subvars[variable];
+							return [...acc, `'${transform_array_key(original)}'!A1`];
 						} else if (
 							dots.length === 1 &&
 							typeof subvars[variable] === "function"
@@ -118,6 +124,7 @@ function calculate(
 			tags: customTags,
 			escape: text => {
 				if (text instanceof Date) {
+					// Dates are now handled via cell references, so this shouldn't be hit
 					return `"${text.toISOString()}"`;
 				} else if (typeof text === "string") {
 					return `"${text}"`;
@@ -145,6 +152,17 @@ function calculate(
 						return acc;
 					}, {});
 
+					return acc;
+				}, {}),
+			// Convert any Date objects into their own sheet with a single cell
+			...Object.entries(vars)
+				.filter(([key, value]) => value instanceof Date)
+				.reduce((acc, [key, value]) => {
+					acc[transform_array_key(key)] = {
+						A1: {
+							v: value,
+						},
+					};
 					return acc;
 				}, {}),
 		},

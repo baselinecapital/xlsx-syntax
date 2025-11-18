@@ -90,3 +90,70 @@ describe("Forula variable tests", function () {
 		).eql(10);
 	});
 });
+
+describe("Date formula tests", function () {
+	it("should extract day from date using DAY()", async () => {
+		// Test with ISO date string
+		should(calculate("DAY({{date}})", { date: new Date("2023-11-15") })).eql(
+			15
+		);
+
+		// Test with different day
+		should(calculate("DAY({{date}})", { date: new Date("2023-01-05") })).eql(5);
+
+		// Test with end of month
+		should(calculate("DAY({{date}})", { date: new Date("2023-03-31") })).eql(
+			31
+		);
+	});
+
+	it("should extract month from date using MONTH()", async () => {
+		// Test with different months
+		should(calculate("MONTH({{date}})", { date: new Date("2023-01-15") })).eql(
+			1
+		);
+
+		should(calculate("MONTH({{date}})", { date: new Date("2023-06-20") })).eql(
+			6
+		);
+
+		should(calculate("MONTH({{date}})", { date: new Date("2023-12-31") })).eql(
+			12
+		);
+	});
+
+	it("should extract year from date using YEAR()", async () => {
+		// Test with different years
+		should(calculate("YEAR({{date}})", { date: new Date("2023-06-15") })).eql(
+			2023
+		);
+
+		should(calculate("YEAR({{date}})", { date: new Date("2020-01-01") })).eql(
+			2020
+		);
+
+		should(calculate("YEAR({{date}})", { date: new Date("2025-12-31") })).eql(
+			2025
+		);
+	});
+
+	it("should combine date functions in formulas", async () => {
+		const testDate = new Date("2023-07-15");
+
+		// Test combining multiple date functions
+		should(calculate("DAY({{date}})+MONTH({{date}})", { date: testDate })).eql(
+			22
+		); // 15 + 7
+
+		should(calculate("YEAR({{date}})-MONTH({{date}})", { date: testDate })).eql(
+			2016
+		); // 2023 - 7
+
+		// Test with arithmetic
+		should(
+			calculate("YEAR({{date}})*100+MONTH({{date}})*10+DAY({{date}})", {
+				date: testDate,
+			})
+		).eql(202385); // 2023*100 + 7*10 + 15
+	});
+});
