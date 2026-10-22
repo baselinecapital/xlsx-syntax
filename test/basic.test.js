@@ -248,6 +248,18 @@ describe("Basic tests", function () {
 		).eql(666);
 	});
 
+	it("should handle text variables with a double quote in them", async () => {
+		should(calculate("{{a}}", { a: 'The "Annex"' })).eql('The "Annex"');
+		should(calculate("UPPER({{a}})", { a: 'The "Annex"' })).eql('THE "ANNEX"');
+		should(calculate(`{{a}}&" (main)"`, { a: '12" pipe' })).eql(
+			'12" pipe (main)'
+		);
+		should(calculate("LEN({{a}})", { a: '"' })).eql(1);
+		should(calculate(`IF({{a}}="a"&CHAR(34)&"b",666,999)`, { a: 'a"b' })).eql(
+			666
+		);
+	});
+
 	it("should handle decimals", async () => {
 		should(
 			calculate(`IF({{a}}=3.14,666,999)`, {

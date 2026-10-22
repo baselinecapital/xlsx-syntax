@@ -127,7 +127,7 @@ function calculate(
 					// Dates are now handled via cell references, so this shouldn't be hit
 					return `"${text.toISOString()}"`;
 				} else if (typeof text === "string") {
-					return `"${text}"`;
+					return `"${text.replace(/"/g, '"&CHAR(34)&"')}"`;
 				}
 				return text;
 			},
